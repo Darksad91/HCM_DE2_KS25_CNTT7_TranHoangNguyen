@@ -1,80 +1,73 @@
 CREATE DATABASE CenterManagement;
 USE CenterManagement;
 
-CREATE TABLE course(
+CREATE TABLE course (
     id_course INT PRIMARY KEY AUTO_INCREMENT,
     name_course VARCHAR(255) NOT NULL,
     lecturer VARCHAR(255) NOT NULL,
-    tuition DECIMAL,
-    duration CHAR(50)
+    tuition DECIMAL(15, 2),
+    duration VARCHAR(50)
 );
 
 CREATE TABLE student (
-    id_student INT AUTO_INCREMENT PRIMARY KEY,
+    id_student INT PRIMARY KEY AUTO_INCREMENT,
     fullname VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE,
     phonenumber CHAR(10) UNIQUE,
-    dob DATE NOT NULL,
+    dob DATE
 );
 
 CREATE TABLE enrollment (
-    id_enrollment INT AUTO_INCREMENT PRIMARY KEY,
+    id_enrollment INT PRIMARY KEY AUTO_INCREMENT,
+    id_student INT,
     date_enrollment DATE NOT NULL,
-    formality_pay BOOLEAN,
+    formality_pay VARCHAR(50),
+    FOREIGN KEY (id_student) REFERENCES student(id_student)
 );
 
 CREATE TABLE enrollment_detail (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_detail INT PRIMARY KEY AUTO_INCREMENT,
     id_enrollment INT,
     id_course INT,
-    FOREIGN KEY (id_enrollment) REFERENCES course,
-    FOREIGN KEY (id_course) REFERENCES enrollment,
-    STATUS BOOLEAN,
-    end_point INT
+    status VARCHAR(50),
+    end_point INT,
+    FOREIGN KEY (id_enrollment) REFERENCES enrollment(id_enrollment),
+    FOREIGN KEY (id_course) REFERENCES course(id_course)
 );
 
-ALTER TABLE Enrollment
-add ghi_chu VARCHAR(255);
+ALTER TABLE enrollment ADD Ghi_chu TEXT;
 
-ALTER TABLE course
-change lecturer Giao_Vien VARCHAR(255) NOT NULL;
+ALTER TABLE course CHANGE lecturer Giao_Vien VARCHAR(255) NOT NULL;
 
-DROP enrollment_Detail;
-DROP enrollment;
+INSERT INTO course (name_course, Giao_Vien, tuition, duration) VALUES
+('Toan 1', 'Nguyen Van A', 500000, '3 thang'),
+('Ngu van 1', 'Nguyen Thi B', 1500000, '3 thang'),
+('IELTS 6.5', 'Tran Van C', 2500000, '6 thang'),
+('Vat ly 1', 'Ha Van D', 1200000, '3 thang'),
+('Hoa hoc 1', 'Tran Anh', 2000000, '3 thang');
 
-INSERT INTO course VALUES
-(NULL, 'Toan 1', 'Nguyen Van A', 100000, 500),
-(NULL, 'Ngu van 1', 'Nguyen Thi B', 2000000, 700),
-(NULL, 'IELTS 6.5', 'Tran Van C' 2000000, 700),
-(NULL, 'Vat ly 1', 'Ha Van D' 1000000, 500);
-(NULL, 'Hoa hoc 1', 'Tran Anh' 1000000, 500);
+INSERT INTO student (fullname, email, phonenumber, dob) VALUES
+('Tran Hoang A', 'THA123@gmail.com', '0823456789', '2005-01-01'),
+('Nguyen Thi B', 'NTB123@gmail.com', '0923456789', '2005-02-01'),
+('Tran Van C', 'TVC123@gmail.com', '0323456789', '2005-03-01'),
+('Nguyen Hong D', NULL, '0812345678', '2005-04-01'),
+('Le Van E', 'LVE123@gmail.com', '0912345678', '2005-05-01');
 
-INSERT INTO student VALUES
-(NULL, 'Tran Hoang A', 'THA123@gmail.com', 0823456789),
-(NULL, 'Nguyen Thi B', 'NTB123@gmail.com', 0923456789),
-(NULL, 'Tran Van C', 'TVC123@gmail.com', 0323456789);
-(NULL, 'Nguyen Hong D', 'NHD123@gmail.com', 0812345678),
-(NULL, 'Le Van E', 'LVE123@gmail.com', 0912345678);
+INSERT INTO enrollment (id_student, date_enrollment, formality_pay) VALUES
+(1, '2025-01-01', 'Chuyen khoan'),
+(2, '2026-07-15', 'Tien mat'),
+(3, '2026-07-20', 'Tien mat'),
+(4, '2025-04-01', 'Chuyen khoan'),
+(5, '2025-05-01', 'Tien mat');
 
-INSERT INTO enrollment VALUES
-(NULL, '2025-01-01', 'Chuyển khoản'),
-(NULL, '2025-02-01', 'Tiền mặt'),
-(NULL, '2025-03-01', 'Tiền mặt');
-(NULL, '2025-04-01', 'Chuyển khoản'),
-(NULL, '2026-07-01', 'Tiền mặt');
+INSERT INTO enrollment_detail (id_enrollment, id_course, status, end_point) VALUES
+(1, 5, 'Dang hoc', NULL),
+(2, 3, 'Dang học', NULL),
+(3, 2, 'Hoan thanh', 8),
+(4, 1, 'Dang hoc', NULL),
+(5, 3, 'Hoan thanh', 7);
 
-SELECT * FROM course;
-SELECT * FROM student;
-SELECT * FROM enrollment;
+UPDATE course SET tuition = tuition * 10% WHERE Giao_Vien = 'Tran Anh';
 
-UPDATE course
-SET tuition * 1.1
-WHERE Giao_Vien = 'Tran Anh';
+DELETE FROM student WHERE email IS NULL;
 
-DELETE FROM student
-WHERE email = NULL;
-
--- cau 1
-SELECT *
-FROM course
-WHERE tuition BETWEEN 1000000 AND 3000000;
